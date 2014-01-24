@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="12" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="basic" tilewidth="70" tileheight="70" spacing="2">
+  <image source="../images/tileset.png" width="914" height="936"/>
+ </tileset>
+ <layer name="platform" width="20" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4CBoRGIM5Bw5sA6h2yQQWU8c5BjALBvIis=
+  </data>
+ </layer>
+ <layer name="evil" width="20" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4CBwRuIvYDYeKAdQiHwwoIpkU/GgpEBOfLUNA8AD1gPqQ==
+  </data>
+ </layer>
+</map>
