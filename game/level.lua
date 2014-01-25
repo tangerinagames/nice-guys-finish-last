@@ -30,9 +30,8 @@ end
 
 function Level:draw()
   love.graphics.draw(self.bg)
-  self.glass:draw()
   self.map:drawLayer(self.map.layers["evil"])
-  self.glass:drawCanvas()
+  self.glass:draw()
   self.player:draw()
   u.invoke(self.enemies, "draw")
 end
