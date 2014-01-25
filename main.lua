@@ -11,6 +11,18 @@ function love.update(dt)
   level:update(dt)
 end
 
+function love.keypressed(key, isrepeat)
+  if key == "up" then
+    level.player:jump()
+  end
+end
+
+function love.gamepadpressed(joystick, button)
+  if button == "a" then
+    level.player:jump()
+  end
+end
+
 function love.draw()
   love.graphics.scale(scaleX, scaleY)
   level:draw()

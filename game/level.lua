@@ -10,8 +10,9 @@ function Level:init(filename)
   self.map = STI.new(filename)
 
   self:createPhysics()
+  self:createCallbacks()
 
-  self.player = Player(360, 100, self.world)
+  self.player = Player(10, 400, self.world)
 end
 
 function Level:update(dt)
@@ -22,7 +23,7 @@ end
 function Level:draw()
   -- self.map:drawLayer(self.map.layers["platform"])
   self.map:draw()
-  -- self.map:drawCollisionMap()
+  self.map:drawCollisionMap()
 
   self.player:draw()
 end
@@ -48,6 +49,22 @@ function Level:createPhysics()
       end
     end
   end
+end
+
+function Level:createCallbacks()
+  local beginContact = function(fixA, fixB, contact)
+    if fixA == self.player.fixture or fixB == self.player.fixture then
+      self.player:beginContact(fixA, fixB, contact)
+    end
+  end
+
+  local endContact = function(fixA, fixB, contact)
+    if fixA == self.player.fixture or fixB == self.player.fixture then
+      self.player:endContact(fixA, fixB, contact)
+    end
+  end
+
+  self.world:setCallbacks(beginContact, endContact)
 end
 
 return Level
