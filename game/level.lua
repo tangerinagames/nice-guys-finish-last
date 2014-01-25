@@ -3,6 +3,7 @@ local Player = require "game.player"
 local Enemy = require "game.enemy"
 local Glass = require "game.glass"
 local STI = require "libs.sti"
+local u = require "libs.underscore"
 
 local Level = class{}
 Level.SCALE = 30
@@ -24,9 +25,7 @@ function Level:update(dt)
   self.world:update(dt)
   self.player:update(dt)
   self.glass:update(dt)
-  for i, enemy in ipairs(self.enemies) do
-    enemy:update(dt)
-  end
+  u.invoke(self.enemies, "update", dt)
 end
 
 function Level:draw()
@@ -35,12 +34,8 @@ function Level:draw()
   self.map:drawLayer(self.map.layers["evil"])
   self.glass:drawCanvas()
   self.player:draw()
-
-  for i, enemy in ipairs(self.enemies) do
-    enemy:draw()
-  end
+  u.invoke(self.enemies, "draw")
 end
-
 
 function Level:createPhysics()
   self.map:createCollisionMap("evil")
@@ -109,14 +104,9 @@ end
 
 function Level:notify(action, object)
   if action == 'destroy' then
-    local i = 1
-    for j, e in ipairs(self.enemies) do
-      if e == object then
-        table.remove(self.enemies, i)
-      else
-        i = i + 1
-      end
-    end
+    self.enemies = u.reject(self.enemies, function(enemy)
+      return enemy == object
+    end)
   end
 end
 
