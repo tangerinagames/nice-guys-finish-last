@@ -86,8 +86,8 @@ return {
           name = "",
           type = "game.player",
           shape = "rectangle",
-          x = 70,
-          y = 560,
+          x = 700,
+          y = 300,
           width = 0,
           height = 0,
           visible = true,
@@ -103,6 +103,7 @@ return {
           height = 0,
           visible = true,
           properties = {
+            ["amount"] = "10",
             ["limit"] = "100,-50",
             ["probability"] = "0.5",
             ["velocity"] = "80,-50"

@@ -123,7 +123,22 @@ function Level:createPlayer(object)
 end
 
 function Level:createEnemy(object)
-  table.insert(self.enemies, Enemy(object.x, object.y, self.world, object))
+  local enemy = Enemy(object.x, object.y, self.world, object)
+  enemy:addObserver(self)
+  table.insert(self.enemies, enemy)
+end
+
+function Level:notify(action, object)
+  if action == 'destroy' then
+    local i = 1
+    for j, e in ipairs(self.enemies) do
+      if e == object then
+        table.remove(self.enemies, i)
+      else
+        i = i + 1
+      end
+    end
+  end
 end
 
 return Level

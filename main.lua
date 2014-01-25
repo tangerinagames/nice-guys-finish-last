@@ -3,6 +3,7 @@ local Level = require "game.level"
 function love.load()
   local w, h = love.graphics.getDimensions()
   scaleX, scaleY = w / 1280, h / 720
+  math.randomseed( os.time() )
 
   level = Level("levels/level01")
 end

@@ -23,6 +23,7 @@ function Player:init(posx, posy, world)
   self.currentAnim = self.anims.walk
 
   self.touchs = 0
+  self.points = 0
 end
 
 function Player:update(dt)
@@ -52,6 +53,7 @@ function Player:draw()
   local vx, vy = self.body:getLinearVelocity()
   love.graphics.print("Touchs: " .. self.touchs, 10, 10)
   love.graphics.print("Velocity: " .. vx .. " " .. vy, 10, 30)
+  love.graphics.print("Points: " .. self.points, 10, 50)
 end
 
 function Player:jump()
@@ -66,11 +68,23 @@ function Player:touch()
 end
 
 function Player:beginContact(fixA, fixB, contact)
+  local ub = fixB:getUserData()
+  if ub and ub.element then
+    ub.element:collisionWithPlayer(self)
+  end
   self.touchs = self.touchs + 1
 end
 
 function Player:endContact(fixA, fixB, contact)
   self.touchs = self.touchs - 1
+end
+
+function Player:getHarm(amount)
+  self.points = self.points - amount
+end
+
+function Player:getLove(amount)
+  self.points = self.points + amount
 end
 
 return Player

@@ -4,6 +4,7 @@ local anim8 = require "libs.anim8"
 local Enemy = class{}
 
 function Enemy:init(posx, posy, world, object)
+  self.observers = {}
   self.initial = {
     x = posx,
     y = posy,
@@ -16,11 +17,18 @@ function Enemy:init(posx, posy, world, object)
   self.body = love.physics.newBody(world, posx, posy, "dynamic")
   self.shape = love.physics.newCircleShape(30)
   self.fixture = love.physics.newFixture(self.body, self.shape)
+  self.fixture:setUserData{
+    ["type"] = "enemy",
+    ["element"] = self
+  }
 
   self.body:setGravityScale(0)
 
-  self:setVelocity(object.properties["velocity"])
+  self:setAmount(object.properties["amount"])
+  self:defineEvilness(object.properties["probability"])
   self:setLimit(object.properties["limit"])
+  self:setVelocity(object.properties["velocity"])
+
 
   local g = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
 
@@ -62,6 +70,42 @@ function Enemy:setLimit(limit)
     x = tonumber(l[1]),
     y = tonumber(l[2])
   }
+end
+
+function Enemy:defineEvilness(probability)
+  self.evil = tonumber(probability) > math.random()
+end
+
+function Enemy:isEvil()
+  return self.evil
+end
+
+function Enemy:setAmount(amount)
+  self.amount = tonumber(amount)
+end
+
+function Enemy:destroy()
+  self:notifyObservers()
+  self.body:destroy()
+end
+
+function Enemy:collisionWithPlayer(collided)
+  if self:isEvil() then
+    collided:getHarm(self.amount)
+  else
+    collided:getLove(self.amount)
+  end
+  self:destroy()
+end
+
+function Enemy:addObserver(observer)
+  table.insert(self.observers, observer)
+end
+
+function Enemy:notifyObservers()
+  for i, o in ipairs(self.observers) do
+    o:notify('destroy', self)
+  end
 end
 
 return Enemy
