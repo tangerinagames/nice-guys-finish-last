@@ -93,7 +93,7 @@ end
 
 function Level:createEnemy(object)
   local enemy = Enemy(object.x, object.y, self.world, object)
-  enemy:addObserver(self)
+  enemy.signals:register('destroy', function(enemy) self:removeEnemy(enemy) end)
   table.insert(self.enemies, enemy)
 end
 
@@ -101,12 +101,10 @@ function Level:createGlass()
   self.glass = Glass(self.map)
 end
 
-function Level:notify(action, object)
-  if action == 'destroy' then
-    self.enemies = u.reject(self.enemies, function(enemy)
-      return enemy == object
-    end)
-  end
+function Level:removeEnemy(enemy)
+  self.enemies = u.reject(self.enemies, function(e)
+    return enemy == e
+  end)
 end
 
 return Level
