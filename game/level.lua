@@ -1,12 +1,12 @@
 local class = require "libs.class"
 local Player = require "game.player"
 local Enemy = require "game.enemy"
+local Glass = require "game.glass"
 local STI = require "libs.sti"
 
 local Level = class{}
 Level.SCALE = 30
 Level.GRAVITY = 9.81 * Level.SCALE
-Level.LENTS_VELOCITY = 2
 
 function Level:init(filename)
   self.enemies = {}
@@ -15,41 +15,23 @@ function Level:init(filename)
   self:createPhysics()
   self:createCallbacks()
   self:createEntities()
+  self:createGlass()
 
-  self.canvas = love.graphics.newCanvas(2048, 2048)
-
-  self.lents = 0
 end
 
 function Level:update(dt)
   self.world:update(dt)
   self.player:update(dt)
+  self.glass:update(dt)
   for i, enemy in ipairs(self.enemies) do
     enemy:update(dt)
-  end
-
-  if love.mouse.isDown('l') then
-    self:increaseLens()
-  else
-    self:decreaseLens()
   end
 end
 
 function Level:draw()
-  self.canvas:clear()
-  self.canvas:renderTo(function()
-    self.map:drawLayer(self.map.layers["platform"])
-
-    local x, y = love.mouse.getPosition()
-
-    love.graphics.setBlendMode("subtractive")
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.circle("fill", x, y, self.lents)
-    love.graphics.setBlendMode("alpha")
-  end)
-
+  self.glass:draw()
   self.map:drawLayer(self.map.layers["evil"])
-  love.graphics.draw(self.canvas, 0, 0)
+  self.glass:drawCanvas()
   self.player:draw()
 
   for i, enemy in ipairs(self.enemies) do
@@ -79,14 +61,6 @@ function Level:createPhysics()
       end
     end
   end
-end
-
-function Level:increaseLens()
-  self.lents = self.lents + Level.LENTS_VELOCITY
-end
-
-function Level:decreaseLens()
-  self.lents = math.max(self.lents - 2 * Level.LENTS_VELOCITY, 0)
 end
 
 function Level:createCallbacks()
@@ -126,6 +100,10 @@ function Level:createEnemy(object)
   local enemy = Enemy(object.x, object.y, self.world, object)
   enemy:addObserver(self)
   table.insert(self.enemies, enemy)
+end
+
+function Level:createGlass()
+  self.glass = Glass(self.map)
 end
 
 function Level:notify(action, object)
