@@ -4,7 +4,7 @@ local anim8 = require "libs.anim8"
 local Player = class{}
 
 function Player:init(posx, posy, world)
-  self.image = love.graphics.newImage("images/player/alien.png")
+  self.image = love.graphics.newImage("images/player/player.png")
   self.width = math.floor(self.image:getWidth() / 4)
   self.height = math.floor(self.image:getHeight() / 3)
 
