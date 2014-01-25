@@ -13,6 +13,7 @@ function Level:init(filename)
   self:createCallbacks()
 
   self.player = Player(10, 400, self.world)
+  self.canvas = love.graphics.newCanvas(2048, 2048)
 end
 
 function Level:update(dt)
@@ -21,10 +22,20 @@ function Level:update(dt)
 end
 
 function Level:draw()
-  -- self.map:drawLayer(self.map.layers["platform"])
-  self.map:draw()
-  -- self.map:drawCollisionMap()
+  self.canvas:clear()
+  self.canvas:renderTo(function()
+    self.map:drawLayer(self.map.layers["platform"])
 
+    local x, y = love.mouse.getPosition()
+
+    love.graphics.setBlendMode("subtractive")
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.circle("fill", x, y, 100)
+    love.graphics.setBlendMode("alpha")
+  end)
+
+  self.map:drawLayer(self.map.layers["evil"])
+  love.graphics.draw(self.canvas, 0, 0)
   self.player:draw()
 end
 

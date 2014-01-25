@@ -56,7 +56,7 @@ return {
       y = 0,
       width = 20,
       height = 12,
-      visible = false,
+      visible = true,
       opacity = 1,
       properties = {},
       encoding = "lua",
@@ -73,6 +73,37 @@ return {
         74, 74, 74, 74, 74, 0, 0, 0, 74, 74, 74, 74, 74, 74, 0, 0, 74, 74, 74, 74,
         99, 99, 99, 99, 99, 0, 0, 0, 99, 99, 99, 99, 99, 99, 0, 0, 99, 99, 99, 99,
         99, 99, 99, 99, 99, 0, 0, 0, 99, 99, 99, 99, 99, 99, 0, 0, 99, 99, 99, 99
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "entities",
+      visible = true,
+      opacity = 1,
+      properties = {},
+      objects = {
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 210,
+          y = 560,
+          width = 0,
+          height = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "Player",
+          type = "game.player",
+          shape = "rectangle",
+          x = 210,
+          y = 560,
+          width = 0,
+          height = 0,
+          visible = true,
+          properties = {}
+        }
       }
     }
   }

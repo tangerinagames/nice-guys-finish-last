@@ -12,7 +12,7 @@ function love.update(dt)
 end
 
 function love.keypressed(key, isrepeat)
-  if key == "up" then
+  if key == " " then
     level.player:jump()
   end
 end
