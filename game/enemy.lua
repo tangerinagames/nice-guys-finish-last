@@ -1,10 +1,11 @@
 local class = require "libs.class"
+local signals = require "libs.signal"
 local anim8 = require "libs.anim8"
 
 local Enemy = class{}
 
 function Enemy:init(posx, posy, world, object)
-  self.observers = {}
+  self.signals = signals.new()
   self.initial = {
     x = posx,
     y = posy,
@@ -83,7 +84,7 @@ function Enemy:setAmount(amount)
 end
 
 function Enemy:destroy()
-  self:notifyObservers()
+  self.signals:emit('destroy', self)
   self.body:destroy()
 end
 
@@ -94,16 +95,6 @@ function Enemy:collisionWithPlayer(collided)
     collided:getLove(self.amount)
   end
   self:destroy()
-end
-
-function Enemy:addObserver(observer)
-  table.insert(self.observers, observer)
-end
-
-function Enemy:notifyObservers()
-  for i, o in ipairs(self.observers) do
-    o:notify('destroy', self)
-  end
 end
 
 return Enemy
