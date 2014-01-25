@@ -5,6 +5,7 @@ local STI = require "libs.sti"
 local Level = class{}
 Level.SCALE = 30
 Level.GRAVITY = 9.81 * Level.SCALE
+Level.LENTS_VELOCITY = 2
 
 function Level:init(filename)
   self.map = STI.new(filename)
@@ -14,11 +15,18 @@ function Level:init(filename)
 
   self.player = Player(10, 400, self.world)
   self.canvas = love.graphics.newCanvas(2048, 2048)
+
+  self.lents = 0
 end
 
 function Level:update(dt)
   self.world:update(dt)
   self.player:update(dt)
+  if love.mouse.isDown('l') then
+    self:increaseLens()
+  else
+    self:decreaseLens()
+  end
 end
 
 function Level:draw()
@@ -30,7 +38,7 @@ function Level:draw()
 
     love.graphics.setBlendMode("subtractive")
     love.graphics.setColor(0, 0, 0)
-    love.graphics.circle("fill", x, y, 100)
+    love.graphics.circle("fill", x, y, self.lents)
     love.graphics.setBlendMode("alpha")
   end)
 
@@ -38,6 +46,7 @@ function Level:draw()
   love.graphics.draw(self.canvas, 0, 0)
   self.player:draw()
 end
+
 
 function Level:createPhysics()
   self.map:createCollisionMap("evil")
@@ -60,6 +69,14 @@ function Level:createPhysics()
       end
     end
   end
+end
+
+function Level:increaseLens()
+  self.lents = self.lents + Level.LENTS_VELOCITY
+end
+
+function Level:decreaseLens()
+  self.lents = math.max(self.lents - 2 * Level.LENTS_VELOCITY, 0)
 end
 
 function Level:createCallbacks()
