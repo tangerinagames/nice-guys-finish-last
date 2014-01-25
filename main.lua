@@ -18,12 +18,6 @@ function love.keypressed(key, isrepeat)
   end
 end
 
-function love.joystickpressed(joystick, button)
-  -- if button == "a" then
-  level.player:jump()
-  -- end
-end
-
 function love.draw()
   love.graphics.scale(scaleX, scaleY)
   level:draw()

@@ -31,6 +31,8 @@ function Glass:draw()
     love.graphics.setColor(0, 0, 0)
     love.graphics.circle("fill", x, y, self.radius)
     love.graphics.setBlendMode("alpha")
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.circle("line", x, y, self.radius)
   end)
 end
 
@@ -45,13 +47,11 @@ function Glass:increaseGlass()
     self.radius = math.max(self.radius - 2 * Glass.LENTS_VELOCITY, 0)
   end
   self.mana = math.max(self.mana - Glass.LENTS_VELOCITY, 0)
-
 end
 
 function Glass:decreaseGlass()
   self.radius = math.max(self.radius - 2 * Glass.LENTS_VELOCITY, 0)
   self.mana = self.mana + Glass.LENTS_VELOCITY
 end
-
 
 return Glass

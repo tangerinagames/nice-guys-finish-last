@@ -29,9 +29,7 @@ function Enemy:init(posx, posy, world, object)
   self:setLimit(object.properties["limit"])
   self:setVelocity(object.properties["velocity"])
 
-
   local g = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
-
   self.animation = anim8.newAnimation(g('1-2', 1), 0.2)
 end
 

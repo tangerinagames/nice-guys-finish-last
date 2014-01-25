@@ -17,6 +17,7 @@
   <object type="game.player" x="70" y="560"/>
   <object type="game.enemy" x="770" y="350">
    <properties>
+    <property name="amount" value="10"/>
     <property name="limit" value="100,-50"/>
     <property name="probability" value="0.5"/>
     <property name="velocity" value="80,-50"/>

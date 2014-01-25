@@ -12,11 +12,12 @@ function Level:init(filename)
   self.enemies = {}
   self.map = STI.new(filename)
 
+  self.bg = love.graphics.newImage("images/forest.jpg")
+
   self:createPhysics()
   self:createCallbacks()
   self:createEntities()
   self:createGlass()
-
 end
 
 function Level:update(dt)
@@ -29,6 +30,7 @@ function Level:update(dt)
 end
 
 function Level:draw()
+  love.graphics.draw(self.bg)
   self.glass:draw()
   self.map:drawLayer(self.map.layers["evil"])
   self.glass:drawCanvas()
@@ -81,7 +83,6 @@ end
 
 function Level:createEntities()
   local layer = self.map.layers["entities"]
-
 
   for i, object in ipairs(layer.objects) do
     if object.type == "game.player" then
