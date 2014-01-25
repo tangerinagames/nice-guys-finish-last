@@ -1,5 +1,6 @@
 local class = require "libs.class"
 local anim8 = require "libs.anim8"
+local u = require "libs.underscore"
 
 local Enemy = class{}
 
@@ -101,9 +102,7 @@ function Enemy:addObserver(observer)
 end
 
 function Enemy:notifyObservers()
-  for i, o in ipairs(self.observers) do
-    o:notify('destroy', self)
-  end
+  u.invoke(self.observers, "notify", "destroy", self)
 end
 
 return Enemy
