@@ -1,5 +1,6 @@
 local class = require "libs.class"
 local Player = require "game.player"
+local Enemy = require "game.enemy"
 local STI = require "libs.sti"
 
 local Level = class{}
@@ -8,12 +9,13 @@ Level.GRAVITY = 9.81 * Level.SCALE
 Level.LENTS_VELOCITY = 2
 
 function Level:init(filename)
+  self.enemies = {}
   self.map = STI.new(filename)
 
   self:createPhysics()
   self:createCallbacks()
+  self:createEntities()
 
-  self.player = Player(10, 400, self.world)
   self.canvas = love.graphics.newCanvas(2048, 2048)
 
   self.lents = 0
@@ -22,6 +24,10 @@ end
 function Level:update(dt)
   self.world:update(dt)
   self.player:update(dt)
+  for i, enemy in ipairs(self.enemies) do
+    enemy:update(dt)
+  end
+
   if love.mouse.isDown('l') then
     self:increaseLens()
   else
@@ -45,6 +51,10 @@ function Level:draw()
   self.map:drawLayer(self.map.layers["evil"])
   love.graphics.draw(self.canvas, 0, 0)
   self.player:draw()
+
+  for i, enemy in ipairs(self.enemies) do
+    enemy:draw()
+  end
 end
 
 
@@ -93,6 +103,27 @@ function Level:createCallbacks()
   end
 
   self.world:setCallbacks(beginContact, endContact)
+end
+
+function Level:createEntities()
+  local layer = self.map.layers["entities"]
+
+
+  for i, object in ipairs(layer.objects) do
+    if object.type == "game.player" then
+      self:createPlayer(object)
+    elseif object.type == "game.enemy" then
+      self:createEnemy(object)
+    end
+  end
+end
+
+function Level:createPlayer(object)
+  self.player = Player(object.x, object.y, self.world)
+end
+
+function Level:createEnemy(object)
+  table.insert(self.enemies, Enemy(object.x, object.y, self.world, object))
 end
 
 return Level

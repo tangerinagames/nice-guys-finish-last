@@ -84,9 +84,9 @@ return {
       objects = {
         {
           name = "",
-          type = "",
+          type = "game.player",
           shape = "rectangle",
-          x = 210,
+          x = 70,
           y = 560,
           width = 0,
           height = 0,
@@ -94,15 +94,19 @@ return {
           properties = {}
         },
         {
-          name = "Player",
-          type = "game.player",
+          name = "",
+          type = "game.enemy",
           shape = "rectangle",
-          x = 210,
-          y = 560,
+          x = 770,
+          y = 350,
           width = 0,
           height = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["limit"] = "100,-50",
+            ["probability"] = "0.5",
+            ["velocity"] = "80,-50"
+          }
         }
       }
     }

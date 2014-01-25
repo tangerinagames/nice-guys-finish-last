@@ -14,7 +14,13 @@
   </data>
  </layer>
  <objectgroup name="entities" width="20" height="12">
-  <object x="210" y="560"/>
-  <object name="Player" type="game.player" x="210" y="560"/>
+  <object type="game.player" x="70" y="560"/>
+  <object type="game.enemy" x="770" y="350">
+   <properties>
+    <property name="limit" value="100,-50"/>
+    <property name="probability" value="0.5"/>
+    <property name="velocity" value="80,-50"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
