@@ -21,19 +21,21 @@ function Glass:update(dt)
   end
 end
 
-function Glass:draw()
+function Glass:draw(camera)
   self.canvas:clear()
   self.canvas:renderTo(function()
-    self.map:drawLayer(self.map.layers["platform"])
+    camera:draw(function()
+      self.map:drawLayer(self.map.layers["platform"])
 
-    local x, y = love.mouse.getPosition()
+      local x, y = camera:mousepos()
 
-    love.graphics.setBlendMode("subtractive")
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.circle("fill", x, y, self.radius)
-    love.graphics.setBlendMode("alpha")
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.circle("line", x, y, self.radius)
+      love.graphics.setBlendMode("subtractive")
+      love.graphics.setColor(0, 0, 0)
+      love.graphics.circle("fill", x, y, self.radius)
+      love.graphics.setBlendMode("alpha")
+      love.graphics.setColor(255, 255, 255)
+      love.graphics.circle("line", x, y, self.radius)
+    end)
   end)
   love.graphics.draw(self.canvas)
 end

@@ -49,11 +49,6 @@ function Player:draw()
   -- love.graphics.setColor(193, 47, 14) --set the drawing color to red for the ball
   -- love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
   -- love.graphics.setColor(255, 255, 255)
-
-  local vx, vy = self.body:getLinearVelocity()
-  love.graphics.print("Touchs: " .. self.touchs, 10, 10)
-  love.graphics.print("Velocity: " .. vx .. " " .. vy, 10, 30)
-  love.graphics.print("Points: " .. self.points, 10, 50)
 end
 
 function Player:jump()

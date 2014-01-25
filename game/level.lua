@@ -1,9 +1,11 @@
 local class = require "libs.class"
+local Camera = require "libs.camera"
+local STI = require "libs.sti"
+local u = require "libs.underscore"
+
 local Player = require "game.player"
 local Enemy = require "game.enemy"
 local Glass = require "game.glass"
-local STI = require "libs.sti"
-local u = require "libs.underscore"
 
 local Level = class{}
 Level.SCALE = 30
@@ -11,6 +13,7 @@ Level.GRAVITY = 9.81 * Level.SCALE
 
 function Level:init(filename)
   self.enemies = {}
+  self.camera = Camera()
   self.map = STI.new(filename)
 
   self.bg = love.graphics.newImage("images/forest.jpg")
@@ -26,14 +29,20 @@ function Level:update(dt)
   self.player:update(dt)
   self.glass:update(dt)
   u.invoke(self.enemies, "update", dt)
+  self.camera:lookAt(self.player.body:getX() + 400, self.player.body:getY())
 end
 
 function Level:draw()
   love.graphics.draw(self.bg)
-  self.map:drawLayer(self.map.layers["evil"])
-  self.glass:draw()
-  self.player:draw()
-  u.invoke(self.enemies, "draw")
+
+  self.camera:draw(self.map.drawLayer, self.map, self.map.layers["evil"])
+  self.camera:draw(self.player.draw, self.player)
+
+  self.glass:draw(self.camera)
+
+  self.camera:draw(function()
+    u.invoke(self.enemies, "draw")
+  end)
 end
 
 function Level:createPhysics()
