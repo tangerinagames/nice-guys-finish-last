@@ -23,7 +23,7 @@ end
 function Level:draw()
   -- self.map:drawLayer(self.map.layers["platform"])
   self.map:draw()
-  self.map:drawCollisionMap()
+  -- self.map:drawCollisionMap()
 
   self.player:draw()
 end

@@ -14,38 +14,54 @@ function Player:init(posx, posy, world)
   -- self.fixture:setRestitution(0.7)
 
   local g = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
-  self.walk = anim8.newAnimation(g('2-3', 3), 0.2)
+
+  self.anims = {
+    walk = anim8.newAnimation(g('2-3', 3), 0.2),
+    fall = anim8.newAnimation(g(1, 2), 1),
+    jump = anim8.newAnimation(g(2, 2), 1)
+  }
+  self.currentAnim = self.anims.walk
 
   self.touchs = 0
 end
 
 function Player:update(dt)
-  self.walk:update(dt)
+  self.currentAnim:update(dt)
 
   local _, vy = self.body:getLinearVelocity()
   self.body:setLinearVelocity(100, vy)
+
+  if vy < -20 then
+    self.currentAnim = self.anims.jump
+  elseif vy > 20 then
+    self.currentAnim = self.anims.fall
+  elseif self:touch() then
+    self.currentAnim = self.anims.walk
+  end
 end
 
 function Player:draw()
   local x = self.body:getX() - self.width / 2
   local y = self.body:getY() - self.height + self.shape:getRadius()
-  self.walk:draw(self.image, x, y)
+  self.currentAnim:draw(self.image, x, y)
 
-  love.graphics.setColor(193, 47, 14) --set the drawing color to red for the ball
-  love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
-  love.graphics.setColor(255, 255, 255)
+  -- love.graphics.setColor(193, 47, 14) --set the drawing color to red for the ball
+  -- love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
+  -- love.graphics.setColor(255, 255, 255)
 
+  local vx, vy = self.body:getLinearVelocity()
   love.graphics.print("Touchs: " .. self.touchs, 10, 10)
+  love.graphics.print("Velocity: " .. vx .. " " .. vy, 10, 30)
 end
 
 function Player:jump()
-  if self:canJump() then
+  if self:touch() then
     local vx, _ = self.body:getLinearVelocity()
     self.body:setLinearVelocity(vx, -400)
   end
 end
 
-function Player:canJump()
+function Player:touch()
   return self.touchs > 0
 end
 

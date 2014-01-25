@@ -17,10 +17,10 @@ function love.keypressed(key, isrepeat)
   end
 end
 
-function love.gamepadpressed(joystick, button)
-  if button == "a" then
-    level.player:jump()
-  end
+function love.joystickpressed(joystick, button)
+  -- if button == "a" then
+  level.player:jump()
+  -- end
 end
 
 function love.draw()
