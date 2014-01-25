@@ -35,10 +35,7 @@ function Glass:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.circle("line", x, y, self.radius)
   end)
-end
-
-function Glass:drawCanvas()
-  love.graphics.draw(self.canvas, 0, 0)
+  love.graphics.draw(self.canvas)
 end
 
 function Glass:increaseGlass()

@@ -1,6 +1,7 @@
 local class = require "libs.class"
 local signals = require "libs.signal"
 local anim8 = require "libs.anim8"
+local u = require "libs.underscore"
 
 local Enemy = class{}
 
