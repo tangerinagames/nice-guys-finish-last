@@ -4,12 +4,13 @@ local anim8 = require "libs.anim8"
 local Glass = class{}
 
 Glass.LENTS_VELOCITY = 2
+Glass.MAX_MANA = 200
 
 function Glass:init(map)
   self.map = map
   self.radius = 0
   self.canvas = love.graphics.newCanvas(2048, 2048)
-  self.mana = 50
+  self.mana = Glass.MAX_MANA
 end
 
 function Glass:update(dt)
@@ -51,7 +52,7 @@ end
 
 function Glass:decreaseGlass()
   self.radius = math.max(self.radius - 2 * Glass.LENTS_VELOCITY, 0)
-  self.mana = self.mana + Glass.LENTS_VELOCITY
+  self.mana = math.min(self.mana + Glass.LENTS_VELOCITY, Glass.MAX_MANA)
 end
 
 return Glass
