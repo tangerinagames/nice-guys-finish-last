@@ -8,9 +8,9 @@
    eJxjYBgFo4CBoRGIM5Bw5sA6h2yQQWU8c5BjALBvIis=
   </data>
  </layer>
- <layer name="evil" width="20" height="12">
+ <layer name="evil" width="20" height="12" visible="0">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4CBwRuIvYDYeKAdQiHwwoIpkU/GgpEBOfLUNA8AD1gPqQ==
+   eJxjYBgFo4CBwRuIvYDYeKAdQiHwwoIJyXvhkU/GgpEBNvlkIuSpZR4AekgQuQ==
   </data>
  </layer>
 </map>

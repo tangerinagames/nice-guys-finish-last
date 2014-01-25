@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
--- Simple Tiled Implementation v0.6.6
+-- Simple Tiled Implementation v0.6.7
 
 local bit = require "bit"
 local STI = {}
@@ -33,18 +33,18 @@ local Map = {}
 
 function STI.new(map)
 	map = map .. ".lua"
-	
+
 	-- Get path to map
 	local path = map:reverse():find("[/\\]") or ""
 	if path ~= "" then
 		path = map:sub(1, 1 + (#map - path))
 	end
-	
+
 	-- Load map
 	map = assert(love.filesystem.load(map), "File not found: " .. map)
 	setfenv(map, {})
 	map = setmetatable(map(), {__index = Map})
-	
+
 	map.tiles		= {}
 	map.collision	= {}
 	map.drawRange	= {
@@ -53,7 +53,7 @@ function STI.new(map)
 		ex = map.width,
 		ey = map.height,
 	}
-	
+
 	-- Create array of quads
 	local gid = 1
 	for i, tileset in ipairs(map.tilesets) do
@@ -63,18 +63,18 @@ function STI.new(map)
 		local th		= tileset.tileheight
 		local s			= tileset.spacing
 		local m			= tileset.margin
-		local w			= math.floor((iw - m - s) / (tw + s))
-		local h			= math.floor((ih - m - s) / (th + s))
-		
+		local w			= math.floor((iw - m) / (tw + s))
+		local h			= math.floor((ih - m) / (th + s))
+
 		for y = 1, h do
 			for x = 1, w do
 				local qx = (x - 1) * tw + m
 				local qy = (y - 1) * th + m
-				
+
 				-- Spacing does not affect the first row/col
 				if x > 1 then qx = qx + s * x - s end
 				if y > 1 then qy = qy + s * y - s end
-				
+
 				map.tiles[gid] = {
 					gid		= gid,
 					tileset	= i,
@@ -87,28 +87,28 @@ function STI.new(map)
 						y = -tileset.tileheight,
 					},
 				}
-				
+
 				if map.orientation == "isometric" then
 					map.tiles[gid].offset.x = -map.tilewidth / 2
 				end
-			
+
 				--[[ THIS IS A TEMPORARY FIX FOR 0.9.1 ]]--
 				if tileset.tileoffset then
 					map.tiles[gid].offset.x = map.tiles[gid].offset.x + tileset.tileoffset.x
 					map.tiles[gid].offset.y = map.tiles[gid].offset.y + tileset.tileoffset.y
 				end
-				
+
 				gid = gid + 1
 			end
 		end
 	end
-	
+
 	-- Add images
 	for i, tileset in ipairs(map.tilesets) do
 		local image = STI.formatPath(path..tileset.image)
 		tileset.image = love.graphics.newImage(image)
 	end
-	
+
 	-- Add tile structure, images
 	for i, layer in ipairs(map.layers) do
 		if layer.type == "tilelayer" then
@@ -124,59 +124,59 @@ function STI.new(map)
 			if layer.image ~= "" then
 				layer.image = love.graphics.newImage(image)
 			end
-			
+
 			layer.x = 0
 			layer.y = 0
 			layer.draw = function() map:drawImageLayer(layer) end
 		end
-		
+
 		layer.update = function(dt) return end
 		map.layers[layer.name] = layer
 	end
-	
+
 	return map
 end
 
 function STI.formatPath(path)
 	local str = string.split(path, "/")
-	
+
 	for i, segment in pairs(str) do
 		if segment == ".." then
 			str[i]		= nil
 			str[i-1]	= nil
 		end
 	end
-	
+
 	path = ""
 	for _, segment in pairs(str) do
 		path = path .. segment .. "/"
 	end
-	
+
 	return string.sub(path, 1, path:len()-1)
 end
 
 function Map:setTileLayerData(layer)
 	local i = 1
 	local map = {}
-	
+
 	for y = 1, layer.height do
 		map[y] = {}
 		for x = 1, layer.width do
 			local gid = layer.data[i]
 			local tile = self.tiles[gid]
-			
+
 			if tile then
 				map[y][x] = tile
 			else
 				local _31 = bit.status(gid, 31)
 				local _30 = bit.status(gid, 30)
 				local _29 = bit.status(gid, 29)
-				
+
 				local realgid = bit.band(gid, bit.bnot(bit.bor(2^31, 2^30, 2^29)))
-				
+
 				local data = {}
 				local tile = self.tiles[realgid]
-				
+
 				if tile then
 					data.gid		= tile.gid
 					data.tileset	= tile.tileset
@@ -185,7 +185,7 @@ function Map:setTileLayerData(layer)
 					data.sx			= tile.sx
 					data.sy			= tile.sy
 					data.r			= tile.r
-					
+
 					if _31 then
 						if _29 then
 							data.r = math.rad(90)
@@ -202,16 +202,16 @@ function Map:setTileLayerData(layer)
 							data.sy = -1
 						end
 					end
-					
+
 					self.tiles[gid] = data
 					map[y][x] = self.tiles[gid]
 				end
 			end
-			
+
 			i = i + 1
 		end
 	end
-	
+
 	return map
 end
 
@@ -227,41 +227,41 @@ function Map:setSpriteBatches(layer)
 		width = bw,
 		height = bh,
 	}
-	
+
 	for tileset, _ in ipairs(self.tilesets) do
 		batches[tileset] = {}
-	
+
 		for y = 1, layer.height do
 			local by = math.ceil(y / bh)
 			batches[tileset][y] = {}
-			
+
 			for x = 1, layer.width do
 				local tile	= layer.data[y][x]
 				local bx	= math.ceil(x / bw)
-				
+
 				if tile and tile.tileset == tileset then
 					local image = self.tilesets[tile.tileset].image
-					
+
 					if not batches[tile.tileset][by][bx] then
 						batches[tile.tileset][by][bx] = love.graphics.newSpriteBatch(image, size)
 					end
-					
+
 					local batch = batches[tile.tileset][by][bx]
-					
+
 					if self.orientation == "orthogonal" then
 						local tx = x * tw + layer.x + tile.offset.x
 						local ty = y * th + layer.y + tile.offset.y
-						
+
 						if tile.sx < 0 then tx = tx + tw end
 						if tile.sy < 0 then ty = ty + th end
 						if tile.r > 0 then tx = tx + tw end
 						if tile.r < 0 then ty = ty + th end
-						
+
 						batch:add(tile.quad, tx, ty, tile.r, tile.sx, tile.sy)
 					elseif self.orientation == "isometric" then
 						local tx = (x - y) * (tw / 2) + layer.x + tile.offset.x
 						local ty = (x + y) * (th / 2) + layer.y + tile.offset.y
-						
+
 						batch:add(tile.quad, tx, ty, tile.r, tile.sx, tile.sy)
 					elseif self.orientation =="staggered" then
 						local tx, ty
@@ -272,14 +272,14 @@ function Map:setSpriteBatches(layer)
 							tx = x * tw + layer.x + tile.offset.x
 							ty = y * th / 2 + layer.y + tile.offset.y
 						end
-						
+
 						batch:add(tile.quad, tx, ty, tile.r, tile.sx, tile.sy)
 					end
 				end
 			end
 		end
 	end
-	
+
 	return batches
 end
 
@@ -293,14 +293,14 @@ function Map:addCustomLayer(name, index)
     }
 	function layer:draw() return end
 	function layer:update(dt) return end
-	
+
 	table.insert(self.layers, index, layer)
 	self.layers[name] = self.layers[index]
 end
 
 function Map:convertToCustomLayer(index)
 	local layer = self.layers[index]
-	
+
 	if layer.type == "tilelayer" then
 		layer.x			= nil
 		layer.y			= nil
@@ -315,7 +315,7 @@ function Map:convertToCustomLayer(index)
 	else
 		return -- invalid layer!
 	end
-	
+
 	layer.type		= "customlayer"
 	function layer:draw() return end
 	function layer:update(dt) return end
@@ -349,7 +349,7 @@ function Map:setDrawRange(tx, ty, w, h)
 	local tw = self.tilewidth
 	local th = self.tileheight
 	local ox, oy, ex, ey
-	
+
 	if self.orientation == "orthogonal" then
 		ox = math.ceil(tx / tw)
 		oy = math.ceil(ty / th)
@@ -366,7 +366,7 @@ function Map:setDrawRange(tx, ty, w, h)
 		ex = math.ceil(ox + w / tw + 1)
 		ey = math.ceil(oy + h / th * 2)
 	end
-	
+
 	self.drawRange = {
 		ox = ox,
 		oy = oy,
@@ -398,13 +398,13 @@ function Map:drawTileLayer(layer)
 	local ey = math.ceil(self.drawRange.ey / bh)
 	local mx = math.ceil(self.width / bw)
 	local my = math.ceil(self.height / bh)
-	
+
 	for by=oy, ey do
 		for bx=ox, ex do
 			if bx >= 1 and bx <= mx and by >= 1 and by <= my then
 				for _, batches in ipairs(layer.batches) do
 					local batch = batches[by][bx]
-					
+
 					if batch then
 						love.graphics.draw(batch)
 					end
@@ -418,18 +418,18 @@ function Map:drawObjectLayer(layer)
 	local line		= { 160, 160, 160, 255 * layer.opacity }
 	local fill		= { 160, 160, 160, 255 * layer.opacity * 0.2 }
 	local shadow	= { 0, 0, 0, 255 * layer.opacity }
-	
+
 	for _, object in ipairs(layer.objects) do
 		local x = layer.x + object.x
 		local y = layer.y + object.y
-		
+
 		if object.shape == "rectangle" then
 			love.graphics.setColor(fill)
 			love.graphics.rectangle("fill", x, y, object.width, object.height)
-			
+
 			love.graphics.setColor(shadow)
 			love.graphics.rectangle("line", x+1, y+1, object.width, object.height)
-			
+
 			love.graphics.setColor(line)
 			love.graphics.rectangle("line", x, y, object.width, object.height)
 		elseif object.shape == "ellipse" then
@@ -441,38 +441,38 @@ function Map:drawObjectLayer(layer)
 				love.graphics.circle(mode, 0, 0, 1, 100)
 				love.graphics.pop()
 			end
-			
+
 			local function drawEllipseOutline(x, y, rx, ry, color)
 				local segments = 100
 				local vertices = {}
-				
+
 				for i=0, segments do
 					local angle = (i / segments) * math.pi * 2
-					
+
 					local px = x + rx / 2 + math.cos(angle) * rx / 2
 					local py = y + ry / 2 + math.sin(angle) * ry / 2
-					
+
 					vertices[#vertices+1] = px
 					vertices[#vertices+1] = py
 				end
-				
+
 				love.graphics.setColor(color)
 				love.graphics.line(vertices)
 			end
-			
+
 			drawEllipse("fill", x, y, object.width, object.height, fill)
 			drawEllipseOutline(x+1, y+1, object.width, object.height, shadow)
 			drawEllipseOutline(x, y, object.width, object.height, line)
 		elseif object.shape == "polygon" then
 			local points = {{},{}}
-			
+
 			for _, point in ipairs(object.polygon) do
 				table.insert(points[1], x + point.x)
 				table.insert(points[1], y + point.y)
 				table.insert(points[2], x + point.x+1)
 				table.insert(points[2], y + point.y+1)
 			end
-			
+
 			love.graphics.setColor(fill)
 			if not love.math.isConvex(points[1]) then
 				local triangles = love.math.triangulate(points[1])
@@ -482,25 +482,25 @@ function Map:drawObjectLayer(layer)
 			else
 				love.graphics.polygon("fill", points[1])
 			end
-			
+
 			love.graphics.setColor(shadow)
 			love.graphics.polygon("line", points[2])
-			
+
 			love.graphics.setColor(line)
 			love.graphics.polygon("line", points[1])
 		elseif object.shape == "polyline" then
 			local points = {{},{}}
-			
+
 			for _, point in ipairs(object.polyline) do
 				table.insert(points[1], x + point.x)
 				table.insert(points[1], y + point.y)
 				table.insert(points[2], x + point.x+1)
 				table.insert(points[2], y + point.y+1)
 			end
-			
+
 			love.graphics.setColor(shadow)
 			love.graphics.line(points[2])
-			
+
 			love.graphics.setColor(line)
 			love.graphics.line(points[1])
 		end
@@ -515,9 +515,9 @@ end
 
 function Map:createCollisionMap(index)
 	local layer	= self.layers[index]
-	
+
 	if layer.type ~= "tilelayer" then return end
-	
+
 	local w		= self.width
 	local h		= self.height
 	local i		= 1
@@ -525,7 +525,7 @@ function Map:createCollisionMap(index)
 		opacity	= 0.5,
 		data	= {},
 	}
-	
+
 	for y=1, h do
 		map.data[y] = {}
 		for x=1, w do
@@ -536,16 +536,16 @@ function Map:createCollisionMap(index)
 			end
 		end
 	end
-	
+
 	self.collision = map
 end
 
 function Map:drawCollisionMap()
 	local tw = self.tilewidth
 	local th = self.tileheight
-	
+
 	love.graphics.setColor(255, 255, 255, 255 * self.collision.opacity)
-	
+
 	for y=1, self.height do
 		for x=1, self.width do
 			local tx = x * tw - tw
@@ -557,7 +557,7 @@ function Map:drawCollisionMap()
 			end
 		end
 	end
-	
+
 	love.graphics.setColor(255, 255, 255, 255)
 end
 
@@ -567,21 +567,21 @@ function string.split(s, d)
 	local i = 0
 	local f
 	local match = '(.-)' .. d .. '()'
-	
+
 	if string.find(s, d) == nil then
 		return {s}
 	end
-	
+
 	for sub, j in string.gmatch(s, match) do
 		i = i + 1
 		t[i] = sub
 		f = j
 	end
-	
+
 	if i ~= 0 then
 		t[i+1] = string.sub(s, f)
 	end
-	
+
 	return t
 end
 

@@ -13,3 +13,6 @@ adb push . /sdcard/lovegame
 
 # Run the apk inside the application
 adb shell am start -S -n $INTENT
+
+# Print log
+# adb logcat ActivityManager:I love_android_sdl2:D *:S
