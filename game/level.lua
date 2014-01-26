@@ -51,7 +51,6 @@ function Level:draw()
   end)
   self.glass:draw(self.camera)
 
-  -- self.camera:draw(self.map.drawCollisionMap, self.map)
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["details"])
   self.camera:draw(self.player.draw, self.player)
 

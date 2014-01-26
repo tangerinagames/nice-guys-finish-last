@@ -84,8 +84,6 @@ function Player:draw()
   local x = self.body:getX() - self.width / 2
   local y = self.body:getY() - self.height + self.shape:getRadius()
   self.currentAnim:draw(self.image, x, y)
-
-  -- self:debugDraw()
 end
 
 function Player:jump(force)
@@ -107,10 +105,6 @@ end
 function Player:beginContact(fixA, fixB, contact)
   local playerFix = self:getPlayerFixture(fixA, fixB)
   local otherFix = self:getOtherFixture(fixA, fixB)
-  -- local ub = fixB:getUserData()
-  -- if ub and ub.element then
-  --   ub.element:collisionWithPlayer(self)
-  -- end
 
   local otherData = otherFix:getUserData()
   if (otherData.type == 'block' and playerFix == self.feet.fixture) then

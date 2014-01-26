@@ -12,7 +12,6 @@ end
 
 function Playing:draw()
   self.level:draw()
-  love.graphics.print("touchs: " .. self.level.player.touchs, 10, 20)
 end
 
 function Playing:keypressed(key, isrepeat)
