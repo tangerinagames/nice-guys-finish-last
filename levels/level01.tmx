@@ -13,7 +13,7 @@
    eJxjYBgFo4CBwRuIvYDYeKAdQiHwwoIJyXvhkU/GgpEBNvlkIuSpZR4AekgQuQ==
   </data>
  </layer>
- <objectgroup name="entities" width="20" height="12">
+ <objectgroup name="entities" width="20" height="12" visible="0">
   <object type="game.player" x="70" y="560"/>
   <object type="game.enemy" x="770" y="350">
    <properties>

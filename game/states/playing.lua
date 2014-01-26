@@ -3,7 +3,7 @@ local Level = require "game.level"
 local Playing = {}
 
 function Playing:enter()
-  self.level = Level("levels/level01")
+  self.level = Level("levels/level00")
 end
 
 function Playing:update(dt)

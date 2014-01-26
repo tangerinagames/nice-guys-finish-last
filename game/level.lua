@@ -29,7 +29,10 @@ function Level:update(dt)
   self.world:update(dt)
   self.glass:update(dt)
   u.invoke(self.enemies, "update", dt)
-  self.camera:lookAt(self.player.body:getX() + Level.CAMERA_X_OFFSET, self.player.body:getY())
+  self.camera:lookAt(
+    math.max(self.player.body:getX() + Level.CAMERA_X_OFFSET, love.graphics.getWidth() / 2),
+    math.min(self.player.body:getY(), love.graphics.getHeight() / 2)
+  )
   self.player:update(dt)
 end
 
@@ -37,14 +40,14 @@ function Level:draw()
   love.graphics.draw(self.bg)
 
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["evil"])
-  self.camera:draw(self.player.draw, self.player)
   self.glass:draw(self.camera)
 
   self.camera:draw(function()
     u.invoke(self.enemies, "draw")
   end)
 
-  self.camera:draw(self.map.drawCollisionMap, self.map)
+  -- self.camera:draw(self.map.drawCollisionMap, self.map)
+  self.camera:draw(self.player.draw, self.player)
 end
 
 function Level:createPhysics()

@@ -13,7 +13,7 @@ function Player:init(posx, posy, world)
   self.body:setFixedRotation(true)
   self.shape = love.physics.newCircleShape(20)
   self.fixture = love.physics.newFixture(self.body, self.shape)
-  self.fixture:setFriction(0.001)
+  self.fixture:setFriction(0)
 
   self.feet = {}
   self.feet.shape = love.physics.newRectangleShape(0, 16, 30, 10)
@@ -42,7 +42,12 @@ function Player:update(dt)
   self.currentAnim:update(dt)
 
   local _, vy = self.body:getLinearVelocity()
-  self.body:setLinearVelocity(200, vy)
+
+  if self:touch() then
+    self.body:setLinearVelocity(200, vy)
+  else
+    self.body:setLinearVelocity(150, vy)
+  end
 
   if vy < -20 then
     self.currentAnim = self.anims.jump
@@ -52,7 +57,7 @@ function Player:update(dt)
     self.currentAnim = self.anims.walk
   end
 
-  if self.body:getY() > 800 then
+  if self.body:getY() > 1000 then
     self:kill()
   end
 end
@@ -75,13 +80,14 @@ function Player:draw()
   local y = self.body:getY() - self.height + self.shape:getRadius()
   self.currentAnim:draw(self.image, x, y)
 
-  self:debugDraw()
+  -- self:debugDraw()
 end
 
 function Player:jump()
   if self:touch() then
     local vx, _ = self.body:getLinearVelocity()
     self.body:setLinearVelocity(vx, -250)
+    -- self.body:applyForce(0, -100000)
   end
 end
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="2000" height="11" tilewidth="70" tileheight="70">
+ <tileset firstgid="1" name="basic" tilewidth="70" tileheight="70" spacing="2">
+  <image source="../images/tileset.png" width="914" height="936"/>
+ </tileset>
+ <layer name="evil" width="2000" height="11">
+  <data encoding="base64" compression="zlib">
+   eJzt3csJwCAQBUDrs4A0YP89hEACEswHcsm6M7B4WLSBx8NSAAAAAAAAAIC/qd0AAAAAAAAAQDbycgAAAAAAAAAyqd2pZw4AAAAAAABANnJyAAAAAAAAAGY36pHrlwMAAAAAAAAws2UfuTgAAAAAAAAAWW25efv4Ri266QAAAAAAAADEdWTnb/NzOTkAAAAAAAAAkZxz7qt/zFs39eY+AAAAAAAAAETUBvO0bzd7AAAAAAAAAIhoBZD0E5Y=
+  </data>
+ </layer>
+ <layer name="platform" width="2000" height="11">
+  <data encoding="base64" compression="zlib">
+   eJzt3MENgCAQRUHKpf8KvBoDKGoEl5nkn7aEF0gJAAAAAAAAAPhK3q12AwAAAAAAAIDoav281dUBAAAAAAAA4K+OPTx3DAAAAAAAAAAiKPVw/RwAAAAAAACAVfQ0cq0cAAAAAAAAgAi0cAAAAAAAAABWd7Wdl27eowMAAAAAAAAQwVn3vvOHu34OAAAAAAAAwCyedu+3BgAAAAAAAAAjje7m+jkAAAAAAAAAM9gAz35COQ==
+  </data>
+ </layer>
+ <objectgroup name="entities" width="2000" height="11">
+  <object type="game.player" x="70" y="560"/>
+  <object type="game.enemy" x="770" y="350">
+   <properties>
+    <property name="amount" value="10"/>
+    <property name="limit" value="100,-50"/>
+    <property name="probability" value="0.5"/>
+    <property name="velocity" value="80,-50"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
