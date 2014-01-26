@@ -3,6 +3,8 @@ local anim8 = require "libs.anim8"
 local u = require "libs.underscore"
 
 local Player = class{}
+Player.VELOCITY = 250
+Player.JUMP = -250
 
 function Player:init(posx, posy, world)
   self.image = love.graphics.newImage("images/player/player.png")
@@ -44,14 +46,14 @@ function Player:update(dt)
   local _, vy = self.body:getLinearVelocity()
 
   if self:touch() then
-    self.body:setLinearVelocity(200, vy)
+    self.body:setLinearVelocity(Player.VELOCITY, vy)
   else
-    self.body:setLinearVelocity(150, vy)
+    self.body:setLinearVelocity(Player.VELOCITY * 0.45, vy)
   end
 
-  if vy < -20 then
+  if vy < -40 then
     self.currentAnim = self.anims.jump
-  elseif vy > 20 then
+  elseif vy > 40 then
     self.currentAnim = self.anims.fall
   elseif self:touch() then
     self.currentAnim = self.anims.walk
@@ -86,8 +88,7 @@ end
 function Player:jump()
   if self:touch() then
     local vx, _ = self.body:getLinearVelocity()
-    self.body:setLinearVelocity(vx, -250)
-    -- self.body:applyForce(0, -100000)
+    self.body:setLinearVelocity(vx, Player.JUMP)
   end
 end
 

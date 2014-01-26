@@ -26,10 +26,10 @@ function Enemy:init(posx, posy, world, object)
 
   self.body:setGravityScale(0)
 
-  self:setAmount(object.properties["amount"])
-  self:defineEvilness(object.properties["probability"])
-  self:setLimit(object.properties["limit"])
-  self:setVelocity(object.properties["velocity"])
+  self:setAmount(10)
+  self:defineEvilness(0.5)
+  self:setLimit(100, -50)
+  self:setVelocity(80, -50)
 
   local g = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
   self.animation = anim8.newAnimation(g('1-2', 1), 0.2)
@@ -59,21 +59,19 @@ function Enemy:draw()
   self.animation:draw(self.image, x, y)
 end
 
-function Enemy:setVelocity(velocity)
-  local v = string.split(velocity, ",")
-  self.body:setLinearVelocity(tonumber(v[1]), tonumber(v[2]))
+function Enemy:setVelocity(vx, vy)
+  self.body:setLinearVelocity(vx, vy)
 end
 
-function Enemy:setLimit(limit)
-  local l = string.split(limit, ",")
+function Enemy:setLimit(lx, ly)
   self.limit = {
-    x = tonumber(l[1]),
-    y = tonumber(l[2])
+    x = lx,
+    y = ly
   }
 end
 
 function Enemy:defineEvilness(probability)
-  self.evil = tonumber(probability) > math.random()
+  self.evil = probability > math.random()
 end
 
 function Enemy:isEvil()
@@ -81,7 +79,7 @@ function Enemy:isEvil()
 end
 
 function Enemy:setAmount(amount)
-  self.amount = tonumber(amount)
+  self.amount = amount
 end
 
 function Enemy:destroy()
