@@ -13,10 +13,10 @@ function Player:init(posx, posy, world)
   self.body:setFixedRotation(true)
   self.shape = love.physics.newCircleShape(20)
   self.fixture = love.physics.newFixture(self.body, self.shape)
-  self.fixture:setFriction(0.01)
+  self.fixture:setFriction(0.001)
 
   self.feet = {}
-  self.feet.shape = love.physics.newRectangleShape(0, 15, 30, 10)
+  self.feet.shape = love.physics.newRectangleShape(0, 16, 30, 10)
   self.feet.fixture = love.physics.newFixture(self.body, self.feet.shape)
   self.feet.fixture:setSensor(true)
 
@@ -51,16 +51,20 @@ function Player:update(dt)
   elseif self:touch() then
     self.currentAnim = self.anims.walk
   end
+
+  if self.body:getY() > 800 then
+    self:kill()
+  end
 end
 
 function Player:debugDraw()
-  love.graphics.setColor(255, 0, 0) --set the drawing color to red for the ball
+  love.graphics.setColor(255, 0, 0)
   love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
 
-  love.graphics.setColor(0, 255, 0) --set the drawing color to red for the ball
+  love.graphics.setColor(0, 255, 0)
   love.graphics.polygon("line", self.body:getWorldPoints(self.feet.shape:getPoints()))
 
-  love.graphics.setColor(0, 0, 255) --set the drawing color to red for the ball
+  love.graphics.setColor(0, 0, 255)
   love.graphics.polygon("line", self.body:getWorldPoints(self.head.shape:getPoints()))
 
   love.graphics.setColor(255, 255, 255)
@@ -118,6 +122,14 @@ function Player:getPlayerFixture(...)
            (fixture == self.feet.fixture) or
            (fixture == self.head.fixture)
   end)
+end
+
+function Player:destroy()
+  self.body:destroy()
+end
+
+function Player:kill()
+  Gamestate.switch(GameOver)
 end
 
 return Player

@@ -10,6 +10,7 @@ local Glass = require "game.glass"
 local Level = class{}
 Level.SCALE = 30
 Level.GRAVITY = 9.81 * Level.SCALE
+Level.CAMERA_X_OFFSET = 400
 
 function Level:init(filename)
   self.enemies = {}
@@ -26,10 +27,10 @@ end
 
 function Level:update(dt)
   self.world:update(dt)
-  self.player:update(dt)
   self.glass:update(dt)
   u.invoke(self.enemies, "update", dt)
-  self.camera:lookAt(self.player.body:getX() + 400, self.player.body:getY())
+  self.camera:lookAt(self.player.body:getX() + Level.CAMERA_X_OFFSET, self.player.body:getY())
+  self.player:update(dt)
 end
 
 function Level:draw()
@@ -111,6 +112,12 @@ function Level:removeEnemy(enemy)
   self.enemies = u.reject(self.enemies, function(e)
     return enemy == e
   end)
+end
+
+function Level:destroy()
+  self.player:destroy()
+  u.invoke(self.enemies, "destroy")
+  self.world:destroy()
 end
 
 return Level

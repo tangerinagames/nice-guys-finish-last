@@ -21,4 +21,8 @@ function Playing:keypressed(key, isrepeat)
   end
 end
 
+function Playing:leave()
+  self.level:destroy()
+end
+
 return Playing
