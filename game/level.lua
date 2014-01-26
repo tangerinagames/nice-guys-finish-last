@@ -18,7 +18,7 @@ function Level:init(filename)
   self.camera = Camera()
   self.map = STI.new(filename)
 
-  self.bg = love.graphics.newImage("images/background.jpg")
+  self.bg = love.graphics.newImage("images/background.png")
 
   self:createPhysics()
   self:createCallbacks()
