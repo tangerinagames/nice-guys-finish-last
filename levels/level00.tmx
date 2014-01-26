@@ -1,27 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="2000" height="11" tilewidth="70" tileheight="70">
+<map version="1.0" orientation="orthogonal" width="250" height="11" tilewidth="70" tileheight="70">
  <tileset firstgid="1" name="basic" tilewidth="70" tileheight="70" spacing="2">
   <image source="../images/tileset.png" width="914" height="936"/>
  </tileset>
- <layer name="evil" width="2000" height="11">
+ <layer name="whater" width="250" height="11">
   <data encoding="base64" compression="zlib">
-   eJzt3csJwCAQBUDrs4A0YP89hEACEswHcsm6M7B4WLSBx8NSAAAAAAAAAIC/qd0AAAAAAAAAQDbycgAAAAAAAAAyqd2pZw4AAAAAAABANnJyAAAAAAAAAGY36pHrlwMAAAAAAAAws2UfuTgAAAAAAAAAWW25efv4Ri266QAAAAAAAADEdWTnb/NzOTkAAAAAAAAAkZxz7qt/zFs39eY+AAAAAAAAAETUBvO0bzd7AAAAAAAAAIhoBZD0E5Y=
+   eJzt1FEKhDAMRdEuqPty/zsQoR8SkuYZLYjeA4Vp2knTcWJrAAAAAAAAAAAAALYxAHxXH+MrVr+33v5efKK2N9/vb7bisKp9nv3fo/VzPKov+qyc4d3H22dj0R7L5s/uqFJqUWJZbV58lkPZv5ryrO7ka8I8ylM5+8p6Lw6r2ufZ95Q6snh2jrdWjUV7sjOf+k2VWtTYrDYvfnd+UHuv0qPZs6r2jo3N5koOhdIzXmx1n+85TTGq
   </data>
  </layer>
- <layer name="platform" width="2000" height="11">
+ <layer name="evil" width="250" height="11">
   <data encoding="base64" compression="zlib">
-   eJzt3MENgCAQRUHKpf8KvBoDKGoEl5nkn7aEF0gJAAAAAAAAAPhK3q12AwAAAAAAAIDoav281dUBAAAAAAAA4K+OPTx3DAAAAAAAAAAiKPVw/RwAAAAAAACAVfQ0cq0cAAAAAAAAgAi0cAAAAAAAAABWd7Wdl27eowMAAAAAAAAQwVn3vvOHu34OAAAAAAAAwCyedu+3BgAAAAAAAAAjje7m+jkAAAAAAAAAM9gAz35COQ==
+   eJztWFuOxDAI6/n2Gr3/HUYr7UeFbGMImZ2RYqlSm06A8DB0ruvg4ODgvfgJF1o/+BycuBxUoPLk9939d2UyduXclNxoI3tm94z/Ju3KZHZ0VuRP6q3KOry1DpXfao9b47f5W2aTeleVG2Woc7pyd3CdG4OV3I+xcX0ZdT73dWxi8XR5LZsvM95g+1f575MQ69WJt6rxCk+onqhyB9mbgcnocMQu7OiLiit38JObP048MzlIV6b/2+sVAdXPxHw2UR+MW1bksrO5M8U7eiiSM9njXTk7ZzEkB80ACFmNrswuSm9Vlsq1ypywovuJqRh9K9BsWtk7GY+OrGnuyWYx155On19Bt7+scgPjKJZP7B36PuqcZcKPu75F/usbB9X4zjl9us9PyXleqsbvBb07Y+zmd5xZO3rYt52q2ct4t1rnVZ5THIXu0V4kS62t9tJqT4w5nfl2Oi8mZGQxmKyp6KvdfJzZ75yPcVjHBtf3Dqp1ns3zKJdZvbF6jvahe9UL3P9B0FrGD5m/4h41VynfRpnIFrYW7VO2xV7Dcis+u37pgvGh4tYKxzh+q9Qb84PD4SiXle87qNZ5dg73nMiObD3Tg95119hvnDqf8Klji7umbGO5tPL8tIX1BcVXauZxYpXpRfZ3zlzhcnY+tYfZ1UE1J19vRAKZ
   </data>
  </layer>
- <objectgroup name="entities" width="2000" height="11">
-  <object type="game.player" x="70" y="560"/>
-  <object type="game.enemy" x="770" y="350">
-   <properties>
-    <property name="amount" value="10"/>
-    <property name="limit" value="100,-50"/>
-    <property name="probability" value="0.5"/>
-    <property name="velocity" value="80,-50"/>
-   </properties>
-  </object>
+ <layer name="platform" width="250" height="11">
+  <data encoding="base64" compression="zlib">
+   eJztVglqBDEMy3PnE/uQ/W0pNBBc25Icz2wpEQT2iB0fspIxDg4ODp7FRayDvwGmV6dnBxMrH97OWn9n/XRzq8OvMhfVdUds0V6vV1GfOmLt7C3K7ehTHRGPMo7Y/zO/iGtZPOh/xS/j466l8pSJDfUL1SWyYeKKzlVnMfKFcntCm/+TtrA8Rzbzd4Z3qJ5or8pnFJuCyI6Nh9HFC+xD5zI8zc64zOeqJqIcK9zL8mb1tmpbwetn3YVv34xGKXl4HPQ+I3/VOjM9nOu1LNTbMfKZ8P6varyiXyiGAfZHQDqyxqf6R3qT5ahohDqHbD6Zz503QBd/IvuqHrGasKN1nboZoarfu28IRV9ZXqEYGd4w9zirhdmZ3b2taE4UIzvnzEyhhWwUMHcBslfvlglWfyNOfGrGGVTuCzTHir5U7Nc3TNZXL/73+H0uQjYPXUDvj3UfkyujqV79Z22fmHP73q/WIKuHMrfqneWBrTvDpcodnPlWbBCvspnO3kzZuWiumBrYc5VZVTWUiZ+Z1927ydra+VWwM+eI315u7MxFca7fWT1Qc9zRCMYPo7EoLyY+m5etY8WHqgMsH7PeRDWr9smCqZvC1V0Nz+L+xJx326lz3hFDR6xPLiVeu8/WseKjGjM7k1VdzFZFB5Qa2PzUeJQ6elxgsMOpL4zNsTg=
+  </data>
+ </layer>
+ <layer name="details" width="250" height="11">
+  <data encoding="base64" compression="zlib">
+   eJztmdkJwzAMhkOHyEMf81DoAB2gA3SVbpG9W0MMxviQZcv6Q/SB6YGPWJJ1OMuCxfpv2/H9q/kghgi79gMYhhIfYr8taBJw578T++1B0+aZ+d/HGSkZG8YouHlQ7ryi5lWzzmPvGjmf4uf28yP4P21iG3wRx7XaQkknVCRtjxo7DQOFks2ixZBH9JvqZxBAk+Uoen2e9vgatTrKxaRUDrAen+/O9VFqLA6I8TCnz9i3nJEWeSPqZhZO9+EdNCpX1lGKmWeUuxbXpmJdex91Bjs9G07WN8Y4P2aGHYb6l5ofDY5OKCDuFR3K/Ral/grvbLh5LEL+27KPVNymvheqgVpHhrGq1WfV7Cgl79a7QK4PiH3SLPmXfOGIe1AEanoflf/W4kpPLqCBZP7h9tUrd03ZUGndY6l//J5ZKmfrpbZnqt5y81DitFRNmzsTVkMb2oywQbPjdn5emBcp
+  </data>
+ </layer>
+ <objectgroup name="entities" width="250" height="11">
+  <object type="game.player" x="70" y="560" width="70" height="70"/>
+  <object type="game.finish" x="17290" y="280" width="70" height="70"/>
+  <object type="game.entity" x="770" y="350"/>
+  <object type="game.entity" x="1400" y="280"/>
+  <object type="game.entity" x="2100" y="420"/>
+  <object type="game.entity" x="2170" y="140"/>
+  <object type="game.entity" x="2940" y="490"/>
+  <object type="game.entity" x="4340" y="560"/>
+  <object type="game.entity" x="4270" y="210"/>
+  <object type="game.entity" x="5250" y="70"/>
+  <object type="game.entity" x="6510" y="70"/>
+  <object type="game.entity" x="7700" y="420"/>
+  <object type="game.entity" x="9030" y="140"/>
+  <object type="game.entity" x="11410" y="210"/>
+  <object type="game.entity" x="12180" y="630"/>
+  <object type="game.entity" x="13160" y="560"/>
+  <object type="game.entity" x="14490" y="140"/>
+  <object type="game.entity" x="15190" y="490"/>
+  <object type="game.entity" x="15610" y="420"/>
  </objectgroup>
 </map>

@@ -3,9 +3,9 @@ local signals = require "libs.signal"
 local anim8 = require "libs.anim8"
 local u = require "libs.underscore"
 
-local Enemy = class{}
+local Entity = class{}
 
-function Enemy:init(posx, posy, world, object)
+function Entity:init(posx, posy, world, object)
   self.signals = signals.new()
   self.initial = {
     x = posx,
@@ -16,26 +16,26 @@ function Enemy:init(posx, posy, world, object)
   self.width = math.floor(self.image:getWidth() / 2)
   self.height = self.image:getHeight()
 
-  self.body = love.physics.newBody(world, posx, posy, "dynamic")
+  self.body = love.physics.newBody(world, posx, posy, "kinematic")
   self.shape = love.physics.newCircleShape(30)
   self.fixture = love.physics.newFixture(self.body, self.shape)
   self.fixture:setUserData{
-    ["type"] = "enemy",
+    ["type"] = "entity",
     ["element"] = self
   }
 
   self.body:setGravityScale(0)
 
-  self:setAmount(object.properties["amount"])
-  self:defineEvilness(object.properties["probability"])
-  self:setLimit(object.properties["limit"])
-  self:setVelocity(object.properties["velocity"])
+  self:setAmount(10)
+  self:defineEvilness(0.5)
+  self:setLimit(100, -50)
+  self:setVelocity(80, -50)
 
   local g = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
   self.animation = anim8.newAnimation(g('1-2', 1), 0.2)
 end
 
-function Enemy:update(dt)
+function Entity:update(dt)
   self.animation:update(dt)
 
   local x = self.body:getX()
@@ -53,49 +53,56 @@ function Enemy:update(dt)
   self.body:setLinearVelocity(vx, vy)
 end
 
-function Enemy:draw()
+function Entity:draw()
   local x = self.body:getX() - self.width / 2
   local y = self.body:getY() - self.height / 2
   self.animation:draw(self.image, x, y)
 end
 
-function Enemy:setVelocity(velocity)
-  local v = string.split(velocity, ",")
-  self.body:setLinearVelocity(tonumber(v[1]), tonumber(v[2]))
+function Entity:setVelocity(vx, vy)
+  self.body:setLinearVelocity(vx, vy)
 end
 
-function Enemy:setLimit(limit)
-  local l = string.split(limit, ",")
+function Entity:setLimit(lx, ly)
   self.limit = {
-    x = tonumber(l[1]),
-    y = tonumber(l[2])
+    x = lx,
+    y = ly
   }
 end
 
-function Enemy:defineEvilness(probability)
-  self.evil = tonumber(probability) > math.random()
+function Entity:defineEvilness(probability)
+  self.evil = probability > math.random()
 end
 
-function Enemy:isEvil()
+function Entity:isEvil()
   return self.evil
 end
 
-function Enemy:setAmount(amount)
-  self.amount = tonumber(amount)
+function Entity:setAmount(amount)
+  self.amount = amount
 end
 
-function Enemy:destroy()
+function Entity:destroy()
   self.signals:emit('destroy', self)
   self.body:destroy()
 end
 
-function Enemy:collisionWithPlayer(collided)
+function Entity:collisionWithPlayer(player)
   if self:isEvil() then
-    collided:getHarm(self.amount)
+    player:getHarm(self.amount)
   else
-    collided:getLove(self.amount)
+    player:getLove(self.amount)
   end
   self:destroy()
 end
 
-return Enemy
+function Entity:killedByPlayer(player)
+  if not self:isEvil() then
+    player:getHarm(self.amount)
+  else
+    player:getLove(self.amount)
+  end
+  self:destroy()
+end
+
+return Entity
