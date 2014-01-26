@@ -10,16 +10,18 @@ function Player:init(posx, posy, world)
   self.height = math.floor(self.image:getHeight() / 3)
 
   self.body = love.physics.newBody(world, posx, posy, "dynamic")
+  self.body:setFixedRotation(true)
   self.shape = love.physics.newCircleShape(20)
   self.fixture = love.physics.newFixture(self.body, self.shape)
-  self.body:setFixedRotation(true)
+  self.fixture:setFriction(0.01)
 
   self.feet = {}
-  self.feet.shape = love.physics.newRectangleShape(0, 15, 40, 10)
+  self.feet.shape = love.physics.newRectangleShape(0, 15, 30, 10)
   self.feet.fixture = love.physics.newFixture(self.body, self.feet.shape)
+  self.feet.fixture:setSensor(true)
 
   self.head = {}
-  self.head.shape = love.physics.newRectangleShape(0, -50, 40, 50)
+  self.head.shape = love.physics.newRectangleShape(0, -30, 40, 80)
   self.head.fixture = love.physics.newFixture(self.body, self.head.shape)
   self.head.fixture:setSensor(true)
 
@@ -40,7 +42,7 @@ function Player:update(dt)
   self.currentAnim:update(dt)
 
   local _, vy = self.body:getLinearVelocity()
-  self.body:setLinearVelocity(100, vy)
+  self.body:setLinearVelocity(200, vy)
 
   if vy < -20 then
     self.currentAnim = self.anims.jump
@@ -75,7 +77,7 @@ end
 function Player:jump()
   if self:touch() then
     local vx, _ = self.body:getLinearVelocity()
-    self.body:setLinearVelocity(vx, -400)
+    self.body:setLinearVelocity(vx, -250)
   end
 end
 

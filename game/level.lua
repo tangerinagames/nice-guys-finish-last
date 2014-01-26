@@ -37,12 +37,13 @@ function Level:draw()
 
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["evil"])
   self.camera:draw(self.player.draw, self.player)
-
   self.glass:draw(self.camera)
 
   self.camera:draw(function()
     u.invoke(self.enemies, "draw")
   end)
+
+  self.camera:draw(self.map.drawCollisionMap, self.map)
 end
 
 function Level:createPhysics()
