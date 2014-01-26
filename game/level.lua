@@ -10,7 +10,7 @@ local Hud = require "game.hud"
 
 local Level = class{}
 Level.SCALE = 30
-Level.GRAVITY = 9.81 * Level.SCALE
+Level.GRAVITY = 10 * Level.SCALE
 Level.CAMERA_X_OFFSET = 400
 
 function Level:init(filename)
@@ -18,7 +18,7 @@ function Level:init(filename)
   self.camera = Camera()
   self.map = STI.new(filename)
 
-  self.bg = love.graphics.newImage("images/forest.jpg")
+  self.bg = love.graphics.newImage("images/background.jpg")
 
   self:createPhysics()
   self:createCallbacks()
@@ -41,6 +41,7 @@ end
 function Level:draw()
   love.graphics.draw(self.bg)
 
+  self.camera:draw(self.map.drawLayer, self.map, self.map.layers["whater"])
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["evil"])
   self.glass:draw(self.camera)
   self.hud:draw()
@@ -50,6 +51,7 @@ function Level:draw()
   end)
 
   -- self.camera:draw(self.map.drawCollisionMap, self.map)
+  self.camera:draw(self.map.drawLayer, self.map, self.map.layers["details"])
   self.camera:draw(self.player.draw, self.player)
 end
 
