@@ -70,15 +70,11 @@ end
 
 function Level:createCallbacks()
   local beginContact = function(fixA, fixB, contact)
-    if fixA == self.player.fixture or fixB == self.player.fixture then
-      self.player:beginContact(fixA, fixB, contact)
-    end
+    self.player:beginContact(fixA, fixB, contact)
   end
 
   local endContact = function(fixA, fixB, contact)
-    if fixA == self.player.fixture or fixB == self.player.fixture then
-      self.player:endContact(fixA, fixB, contact)
-    end
+    self.player:endContact(fixA, fixB, contact)
   end
 
   self.world:setCallbacks(beginContact, endContact)

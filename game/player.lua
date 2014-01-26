@@ -1,5 +1,6 @@
 local class = require "libs.class"
 local anim8 = require "libs.anim8"
+local u = require "libs.underscore"
 
 local Player = class{}
 
@@ -11,7 +12,16 @@ function Player:init(posx, posy, world)
   self.body = love.physics.newBody(world, posx, posy, "dynamic")
   self.shape = love.physics.newCircleShape(20)
   self.fixture = love.physics.newFixture(self.body, self.shape)
-  -- self.fixture:setRestitution(0.7)
+  self.body:setFixedRotation(true)
+
+  self.feet = {}
+  self.feet.shape = love.physics.newRectangleShape(0, 15, 40, 10)
+  self.feet.fixture = love.physics.newFixture(self.body, self.feet.shape)
+
+  self.head = {}
+  self.head.shape = love.physics.newRectangleShape(0, -50, 40, 50)
+  self.head.fixture = love.physics.newFixture(self.body, self.head.shape)
+  self.head.fixture:setSensor(true)
 
   local g = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
 
@@ -41,14 +51,25 @@ function Player:update(dt)
   end
 end
 
+function Player:debugDraw()
+  love.graphics.setColor(255, 0, 0) --set the drawing color to red for the ball
+  love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
+
+  love.graphics.setColor(0, 255, 0) --set the drawing color to red for the ball
+  love.graphics.polygon("line", self.body:getWorldPoints(self.feet.shape:getPoints()))
+
+  love.graphics.setColor(0, 0, 255) --set the drawing color to red for the ball
+  love.graphics.polygon("line", self.body:getWorldPoints(self.head.shape:getPoints()))
+
+  love.graphics.setColor(255, 255, 255)
+end
+
 function Player:draw()
   local x = self.body:getX() - self.width / 2
   local y = self.body:getY() - self.height + self.shape:getRadius()
   self.currentAnim:draw(self.image, x, y)
 
-  -- love.graphics.setColor(193, 47, 14) --set the drawing color to red for the ball
-  -- love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
-  -- love.graphics.setColor(255, 255, 255)
+  self:debugDraw()
 end
 
 function Player:jump()
@@ -63,15 +84,22 @@ function Player:touch()
 end
 
 function Player:beginContact(fixA, fixB, contact)
-  local ub = fixB:getUserData()
-  if ub and ub.element then
-    ub.element:collisionWithPlayer(self)
+  local playerFix = self:getPlayerFixture(fixA, fixB)
+  -- local otherFix = self:getOtherFixture(fixA, fixB)
+  -- local ub = fixB:getUserData()
+  -- if ub and ub.element then
+  --   ub.element:collisionWithPlayer(self)
+  -- end
+  if (playerFix == self.feet.fixture) then
+    self.touchs = self.touchs + 1
   end
-  self.touchs = self.touchs + 1
 end
 
 function Player:endContact(fixA, fixB, contact)
-  self.touchs = self.touchs - 1
+  local playerFix = self:getPlayerFixture(fixA, fixB)
+  if (playerFix == self.feet.fixture) then
+    self.touchs = self.touchs - 1
+  end
 end
 
 function Player:getHarm(amount)
@@ -80,6 +108,14 @@ end
 
 function Player:getLove(amount)
   self.points = self.points + amount
+end
+
+function Player:getPlayerFixture(...)
+  return u.detect({...}, function(fixture)
+    return (fixture == self.fixture) or
+           (fixture == self.feet.fixture) or
+           (fixture == self.head.fixture)
+  end)
 end
 
 return Player
