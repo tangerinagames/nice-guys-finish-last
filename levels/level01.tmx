@@ -15,7 +15,7 @@
  </layer>
  <objectgroup name="entities" width="20" height="12" visible="0">
   <object type="game.player" x="70" y="560"/>
-  <object type="game.enemy" x="770" y="350">
+  <object type="game.entity" x="770" y="350">
    <properties>
     <property name="amount" value="10"/>
     <property name="limit" value="100,-50"/>
