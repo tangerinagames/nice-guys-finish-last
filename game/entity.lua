@@ -5,52 +5,32 @@ local u = require "libs.underscore"
 
 local Entity = class{}
 
-function Entity:init(posx, posy, world, object)
+function Entity:init(posx, posy, world, object, image)
   self.signals = signals.new()
   self.initial = {
     x = posx,
     y = posy,
   }
 
-  self.image = love.graphics.newImage("images/enemies/fly.png")
+  self.image = love.graphics.newImage(image)
   self.width = math.floor(self.image:getWidth() / 2)
   self.height = self.image:getHeight()
 
-  self.body = love.physics.newBody(world, posx, posy, "kinematic")
-  self.shape = love.physics.newCircleShape(30)
+  self.body = love.physics.newBody(world, posx, posy, "dynamic")
   self.fixture = love.physics.newFixture(self.body, self.shape)
   self.fixture:setUserData{
     ["type"] = "entity",
     ["element"] = self
   }
 
-  self.body:setGravityScale(0)
-
   self:setAmount(10)
   self:defineEvilness(0.5)
-  self:setLimit(100, -50)
-  self:setVelocity(80, -50)
 
-  local g = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
-  self.animation = anim8.newAnimation(g('1-2', 1), 0.2)
+  self.grid = anim8.newGrid(self.width, self.height, self.image:getWidth(), self.image:getHeight())
 end
 
 function Entity:update(dt)
   self.animation:update(dt)
-
-  local x = self.body:getX()
-  local y = self.body:getY()
-  local vx, vy = self.body:getLinearVelocity()
-
-  if (x > (self.initial.x + self.limit.x)) or (x < self.initial.x) then
-    vx = vx * -1
-  end
-
-  if (y < (self.initial.y + self.limit.y)) or (y > self.initial.y) then
-    vy = vy * -1
-  end
-
-  self.body:setLinearVelocity(vx, vy)
 end
 
 function Entity:draw(realFace)
@@ -61,17 +41,6 @@ function Entity:draw(realFace)
   if realFace and self:isEvil() then love.graphics.setColor(200, 0, 200) end
   self.animation:draw(self.image, x, y)
   if realFace then love.graphics.setColor(255, 255, 255) end
-end
-
-function Entity:setVelocity(vx, vy)
-  self.body:setLinearVelocity(vx, vy)
-end
-
-function Entity:setLimit(lx, ly)
-  self.limit = {
-    x = lx,
-    y = ly
-  }
 end
 
 function Entity:defineEvilness(probability)

@@ -4,7 +4,8 @@ local STI = require "libs.sti"
 local u = require "libs.underscore"
 
 local Player = require "game.player"
-local Entity = require "game.entity"
+local Fly = require "game.fly"
+local Rabbit = require "game.rabbit"
 local Glass = require "game.glass"
 local Hud = require "game.hud"
 
@@ -112,6 +113,7 @@ function Level:createPlayer(object)
 end
 
 function Level:createEntity(object)
+  local Entity = ({ Rabbit, Fly })[love.math.random(1, 2)]
   local entity = Entity(object.x, object.y, self.world, object)
   entity.signals:register('destroy', function(entity) self:removeEntity(entity) end)
   table.insert(self.entities, entity)
