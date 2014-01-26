@@ -53,10 +53,14 @@ function Entity:update(dt)
   self.body:setLinearVelocity(vx, vy)
 end
 
-function Entity:draw()
+function Entity:draw(realFace)
+  realFace = realFace or false
   local x = self.body:getX() - self.width / 2
   local y = self.body:getY() - self.height / 2
+
+  if realFace and self:isEvil() then love.graphics.setColor(200, 0, 200) end
   self.animation:draw(self.image, x, y)
+  if realFace then love.graphics.setColor(255, 255, 255) end
 end
 
 function Entity:setVelocity(vx, vy)

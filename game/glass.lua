@@ -1,13 +1,14 @@
 local class = require "libs.class"
 local anim8 = require "libs.anim8"
+local u = require "libs.underscore"
 
 local Glass = class{}
 
 Glass.LENTS_VELOCITY = 2
 Glass.MAX_MANA = 200
 
-function Glass:init(map)
-  self.map = map
+function Glass:init(level)
+  self.level = level
   self.radius = 0
   self.canvas = love.graphics.newCanvas(2048, 2048)
   self.mana = Glass.MAX_MANA
@@ -25,7 +26,8 @@ function Glass:draw(camera)
   self.canvas:clear()
   self.canvas:renderTo(function()
     camera:draw(function()
-      self.map:drawLayer(self.map.layers["platform"])
+      self.level.map:drawLayer(self.level.map.layers["platform"])
+      u.invoke(self.level.entities, "draw")
 
       local x, y = camera:mousepos()
 
