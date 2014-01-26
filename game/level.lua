@@ -43,16 +43,16 @@ function Level:draw()
 
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["whater"])
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["evil"])
-  self.glass:draw(self.camera)
-  self.hud:draw()
-
   self.camera:draw(function()
-    u.invoke(self.entities, "draw")
+    u.invoke(self.entities, "draw", true)
   end)
+  self.glass:draw(self.camera)
 
   -- self.camera:draw(self.map.drawCollisionMap, self.map)
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["details"])
   self.camera:draw(self.player.draw, self.player)
+
+  self.hud:draw()
 end
 
 function Level:createPhysics()
@@ -116,7 +116,7 @@ function Level:createEntity(object)
 end
 
 function Level:createGlass()
-  self.glass = Glass(self.map)
+  self.glass = Glass(self)
 end
 
 function Level:createHud()
