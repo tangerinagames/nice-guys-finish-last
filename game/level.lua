@@ -6,6 +6,7 @@ local u = require "libs.underscore"
 local Player = require "game.player"
 local Entity = require "game.entity"
 local Glass = require "game.glass"
+local Hud = require "game.hud"
 
 local Level = class{}
 Level.SCALE = 30
@@ -23,6 +24,7 @@ function Level:init(filename)
   self:createCallbacks()
   self:createEntities()
   self:createGlass()
+  self:createHud()
 end
 
 function Level:update(dt)
@@ -41,6 +43,7 @@ function Level:draw()
 
   self.camera:draw(self.map.drawLayer, self.map, self.map.layers["evil"])
   self.glass:draw(self.camera)
+  self.hud:draw()
 
   self.camera:draw(function()
     u.invoke(self.entities, "draw")
@@ -112,6 +115,10 @@ end
 
 function Level:createGlass()
   self.glass = Glass(self.map)
+end
+
+function Level:createHud()
+  self.hud = Hud(self.player, self.glass)
 end
 
 function Level:removeEntity(entity)

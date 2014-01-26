@@ -4,6 +4,8 @@ local u = require "libs.underscore"
 
 local Player = class{}
 
+Player.MAX_HEALTH = 3
+
 function Player:init(posx, posy, world)
   self.image = love.graphics.newImage("images/player/player.png")
   self.width = math.floor(self.image:getWidth() / 4)
@@ -36,6 +38,7 @@ function Player:init(posx, posy, world)
 
   self.touchs = 0
   self.points = 0
+  self.health = Player.MAX_HEALTH
   self.small_jump = 0
 end
 
