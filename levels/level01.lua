@@ -95,7 +95,7 @@ return {
         },
         {
           name = "",
-          type = "game.enemy",
+          type = "game.entity",
           shape = "rectangle",
           x = 770,
           y = 350,

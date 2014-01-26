@@ -39,6 +39,7 @@ function Player:init(posx, posy, world)
   self.touchs = 0
   self.points = 0
   self.health = Player.MAX_HEALTH
+  self.small_jump = 0
 end
 
 function Player:update(dt)
@@ -86,10 +87,11 @@ function Player:draw()
   -- self:debugDraw()
 end
 
-function Player:jump()
+function Player:jump(force)
+  force = force or 1
   if self:touch() then
     local vx, _ = self.body:getLinearVelocity()
-    self.body:setLinearVelocity(vx, -250)
+    self.body:setLinearVelocity(vx, -250 * force)
     -- self.body:applyForce(0, -100000)
   end
 end
@@ -98,15 +100,25 @@ function Player:touch()
   return self.touchs > 0
 end
 
+function Player:touched()
+  self.touchs = self.touchs + 1
+end
+
 function Player:beginContact(fixA, fixB, contact)
   local playerFix = self:getPlayerFixture(fixA, fixB)
-  -- local otherFix = self:getOtherFixture(fixA, fixB)
+  local otherFix = self:getOtherFixture(fixA, fixB)
   -- local ub = fixB:getUserData()
   -- if ub and ub.element then
   --   ub.element:collisionWithPlayer(self)
   -- end
-  if (playerFix == self.feet.fixture) then
-    self.touchs = self.touchs + 1
+
+  local otherData = otherFix:getUserData()
+  if (otherData.type == 'block' and playerFix == self.feet.fixture) then
+    self:touched()
+  elseif otherData.type == 'entity' and playerFix == self.feet.fixture then
+    self:killEntity(otherData.element)
+  elseif otherData.type == 'entity' and playerFix ~= self.feet.fixture then
+    otherData.element:collisionWithPlayer(self)
   end
 end
 
@@ -125,11 +137,25 @@ function Player:getLove(amount)
   self.points = self.points + amount
 end
 
+function Player:killEntity(entity)
+  entity:killedByPlayer(self)
+  self:touched()
+  self:jump(0.5)
+end
+
 function Player:getPlayerFixture(...)
   return u.detect({...}, function(fixture)
     return (fixture == self.fixture) or
            (fixture == self.feet.fixture) or
            (fixture == self.head.fixture)
+  end)
+end
+
+function Player:getOtherFixture(...)
+  return u.detect({...}, function(fixture)
+    return not ((fixture == self.fixture) or
+           (fixture == self.feet.fixture) or
+           (fixture == self.head.fixture))
   end)
 end
 
