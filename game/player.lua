@@ -129,6 +129,13 @@ function Player:endContact(fixA, fixB, contact)
   end
 end
 
+function Player:getDamage(amount)
+  self.health = self.health - 1
+  if self.health < 1 then
+    Gamestate.switch(GameOver)
+  end
+end
+
 function Player:getHarm(amount)
   self.points = self.points - amount
 end
@@ -161,6 +168,7 @@ end
 
 function Player:destroy()
   self.body:destroy()
+  self.body = nil
 end
 
 function Player:kill()
