@@ -1,4 +1,5 @@
 Gamestate = require "libs.gamestate"
+StartScreen = require "game.states.startscreen"
 Playing = require "game.states.playing"
 GameOver = require "game.states.gameover"
 
@@ -7,5 +8,5 @@ function love.load()
   love.mouse.setCursor(fairy)
 
   Gamestate.registerEvents()
-  Gamestate.switch(Playing)
+  Gamestate.switch(StartScreen)
 end

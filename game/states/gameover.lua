@@ -1,9 +1,11 @@
 local GameOver = {}
 
-function GameOver:draw()
-  local w, h = love.graphics.getDimensions()
+function GameOver:enter()
+  self.image = love.graphics.newImage("images/gameover.png")
+end
 
-  love.graphics.print("GameOver! press space to retry. ", w / 2 - 100, h / 2)
+function GameOver:draw()
+  love.graphics.draw(self.image)
 end
 
 function GameOver:keypressed(key, isrepeat)
