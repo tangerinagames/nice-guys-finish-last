@@ -93,7 +93,7 @@ end
 
 function Entity:collisionWithPlayer(player)
   if self:isEvil() then
-    player:getHarm(self.amount)
+    player:getDamage(self.amount)
   else
     player:getLove(self.amount)
   end

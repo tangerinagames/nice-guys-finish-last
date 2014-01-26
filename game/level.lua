@@ -31,11 +31,13 @@ function Level:update(dt)
   self.world:update(dt)
   self.glass:update(dt)
   u.invoke(self.entities, "update", dt)
-  self.camera:lookAt(
-    math.max(self.player.body:getX() + Level.CAMERA_X_OFFSET, love.graphics.getWidth() / 2),
-    math.min(self.player.body:getY(), love.graphics.getHeight() / 2)
-  )
-  self.player:update(dt)
+  if self.player.body then
+    self.camera:lookAt(
+      math.max(self.player.body:getX() + Level.CAMERA_X_OFFSET, love.graphics.getWidth() / 2),
+      math.min(self.player.body:getY(), love.graphics.getHeight() / 2)
+    )
+    self.player:update(dt)
+  end
 end
 
 function Level:draw()
