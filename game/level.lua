@@ -58,7 +58,7 @@ function Level:draw()
 end
 
 function Level:createPhysics()
-  self.map:createCollisionMap("evil")
+  self.map:setCollisionMap("evil")
 
   love.physics.setMeter(Level.SCALE)
   self.world = love.physics.newWorld(0, Level.GRAVITY, true)
